@@ -1,0 +1,822 @@
+const generateRelevantFakeReviews = () => {
+  // Helper function to generate a random timestamp within the last year
+  const getRandomTimestamp = () => {
+    const currentDate = new Date('2024-10-19T00:00:00Z');
+    const pastYearDate = new Date(currentDate);
+    pastYearDate.setFullYear(pastYearDate.getFullYear() - 1);
+    const randomTime = pastYearDate.getTime() + Math.random() * (currentDate.getTime() - pastYearDate.getTime());
+    return new Date(randomTime).toISOString();
+  };
+
+  const reviews = [
+    {
+      reviewer: "Maria Gonzales",
+      overallRating: 4.3,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "This place is a real hidden gem! The food is absolutely fantastic—authentic Mexican flavors that reminded me of my grandmother's cooking. Everything tasted fresh, especially the tacos and the homemade salsas, which were bursting with flavor. The carne asada was tender and perfectly seasoned, and the vegetarian options like the grilled vegetable fajitas were equally impressive. It's definitely the kind of place you come to for the food, not for the ambiance or the service. The service was a bit slow and the staff seemed overwhelmed during peak hours, but I didn't mind because the food more than made up for it. The decor is nothing special, just some basic tables and chairs, but honestly, that adds to the charm—it feels like you're discovering a local secret. For the price, the portions were generous, and I left feeling full and happy. Highly recommend if you care about taste and value above all else!"
+    },
+    {
+      reviewer: "John Smith",
+      overallRating: 4.0,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Amazing food at great prices! The tacos are out of this world—so flavorful and authentic. The service wasn't the best; our waiter seemed distracted and it took a while to get our orders. However, the guacamole was freshly made right at the table, and the pico de gallo had just the right amount of spice. The ambiance is pretty basic, with minimal decor and simple seating, but who cares when the food is this good? The margaritas are a must-try, especially their signature spicy mango margarita. I'll definitely be coming back for more."
+    },
+    {
+      reviewer: "Emily Johnson",
+      overallRating: 4.5,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The best Mexican food I've had in a while. The taste is unbeatable, and the prices are super reasonable. The service could use some improvement; while the staff was friendly, they seemed understaffed during our visit, leading to longer wait times. The churros for dessert were perfectly crispy on the outside and soft on the inside, dusted with just the right amount of cinnamon sugar. Overall, a great experience, especially if you're focused on the food. The carne al pastor is highly recommended!"
+    },
+    {
+      reviewer: "Carlos Ramirez",
+      overallRating: 3.8,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food, decent prices. The service was okay, nothing special, and the atmosphere was pretty average. The restaurant could use a bit of a facelift, but it's worth it for the taste. The enchiladas were particularly good, filled with rich, savory meat and topped with a delicious homemade sauce. The margaritas were also enjoyable, though a bit strong for my taste."
+    },
+    {
+      reviewer: "Samantha Lee",
+      overallRating: 4.2,
+      taste: 5,
+      service: 3,
+      atmosphere: 4,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Fantastic flavors and great value for money! The atmosphere is cozy with warm lighting and rustic decor that gives it a homey feel. Service was a bit slow, but the food was worth the wait. Loved the homemade guacamole—it was the best I've ever had, with just the right balance of avocado, lime, and spices. The seafood tacos were fresh and flavorful, and the side of refried beans complemented the meal perfectly."
+    },
+    {
+      reviewer: "Michael Brown",
+      overallRating: 4.7,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Absolutely loved the food here. The tacos were amazing, and the prices are unbeatable. The ambiance is simple, with clean tables and a no-frills setup that keeps the focus on the food. The service could be better; our drinks took a while to arrive, but overall, a fantastic experience. The carne asada was grilled to perfection, and the homemade salsas added a wonderful kick to each dish. Highly recommend trying their special fajitas."
+    },
+    {
+      reviewer: "Jessica Wilson",
+      overallRating: 4.0,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great food, especially for the price. The atmosphere is very basic, with plain decor and simple seating arrangements, but the food makes up for it. The service was just okay; our server was polite but not very attentive. I'll definitely be back for the taste. The pollo asado was tender and flavorful, and the sides of rice and beans were cooked just right."
+    },
+    {
+      reviewer: "Daniel Green",
+      overallRating: 3.5,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food was good, but the atmosphere left a lot to be desired. It's definitely more of a hole-in-the-wall kind of place, with limited seating and outdated decor. The flavors are worth trying, though. The service was average, nothing to write home about. The tacos de lengua were a unique choice and surprisingly tasty, but the overall dining experience could be improved."
+    },
+    {
+      reviewer: "Laura White",
+      overallRating: 4.1,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food here is amazing—definitely the highlight. The service and atmosphere are just okay, but the taste and value are what will keep me coming back. The burritos are a must-try, generously filled with fresh ingredients and perfectly seasoned. The homemade salsa verde adds a wonderful tangy flavor that elevates the entire meal."
+    },
+    {
+      reviewer: "Kevin Adams",
+      overallRating: 4.4,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Incredible food with authentic flavors! The service was friendly but a bit slow. The atmosphere is nothing special, but the food is well worth it. Highly recommend for the value and taste. Don't miss out on their churros for dessert—they're crispy, sweet, and the perfect end to a delicious meal. The carne asada tacos were juicy and full of flavor, and the side of elote (Mexican street corn) was a delightful addition."
+    },
+    {
+      reviewer: "Ashley Brown",
+      overallRating: 3.9,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "This place serves some pretty good food, though the decor is quite basic and could use some updating. The taste was definitely worth it, but don't expect too much in terms of service or atmosphere. I'd come back for a quick bite. The shrimp ceviche was fresh and tangy, and the queso fundido was rich and cheesy—perfect for sharing."
+    },
+    {
+      reviewer: "Chris Miller",
+      overallRating: 4.6,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food is absolutely phenomenal! The authenticity and quality are evident in every bite. Service was a little slow, but they were friendly and accommodating. Loved the simple yet charming vibe. Great value for the price. The carnitas were melt-in-your-mouth tender, and the homemade tortillas were soft and fresh. Highly recommend trying their specialty margaritas—they're a perfect complement to the meal."
+    },
+    {
+      reviewer: "Angela Carter",
+      overallRating: 4.3,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "I love coming here for the amazing flavors. The tacos are my favorite, and you just can't beat the value. Service is average; the staff seems busy and not very attentive, but I come here for the food, not the frills. Highly recommended for taste and price. The al pastor was marinated to perfection, and the side of black beans was creamy and flavorful."
+    },
+    {
+      reviewer: "Paul Walker",
+      overallRating: 3.7,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Decent food for a decent price. Nothing extraordinary, but a good spot if you're craving some authentic Mexican dishes. The atmosphere could use some work, though. The seating was a bit uncomfortable, and the lighting was dim, making it hard to read the menu. The carne asada plate was satisfying, and the homemade tortillas were a nice touch."
+    },
+    {
+      reviewer: "Diana Evans",
+      overallRating: 4.8,
+      taste: 5,
+      service: 4,
+      atmosphere: 4,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The flavors here are to die for! The food tastes fresh and authentic, and the portions are generous. The atmosphere is relaxed, with a nice mix of traditional Mexican decor and modern touches. Service was okay, but the food is what truly stands out. Definitely one of my new favorite spots. The mole poblano was rich and complex, and the side of Spanish rice was perfectly seasoned."
+    },
+    {
+      reviewer: "Brian Thompson",
+      overallRating: 4.1,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great value for excellent food. It's not about the looks; it's about the taste. Service was just okay, but I was here for the flavors, and they did not disappoint. The salsa bar is a nice touch, offering a variety of salsas from mild to extra spicy. The grilled shrimp tacos were succulent and perfectly seasoned."
+    },
+    {
+      reviewer: "Natalie Brooks",
+      overallRating: 4.5,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Absolutely delicious! The flavors are bold, and the ingredients taste so fresh. Service was friendly, though a bit slow. The atmosphere is simple, but the food makes it worth every visit. Can't wait to come back. The fish tacos were flaky and perfectly cooked, and the side of mango salsa added a sweet and spicy kick."
+    },
+    {
+      reviewer: "Ethan Scott",
+      overallRating: 3.6,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food was decent, but the atmosphere could use some serious improvement. Service wasn't the best either; our waiter forgot one of our orders. However, I think the taste made up for it somewhat. Might give it another try. The beef barbacoa was tender, and the side of guacamole was creamy and flavorful."
+    },
+    {
+      reviewer: "Olivia Hall",
+      overallRating: 4.9,
+      taste: 5,
+      service: 4,
+      atmosphere: 4,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "One of the best places I've been to for authentic Mexican food! The taste was absolutely incredible, and the value is unmatched. The service was friendly, and I found the atmosphere to be charming in its own way. Highly recommend trying their specialty dishes like the cochinita pibil and the street-style tacos. The homemade horchata was a refreshing complement to the spicy dishes."
+    },
+    {
+      reviewer: "Jacob King",
+      overallRating: 4.0,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "If you're looking for great Mexican food, this is the place. Don't expect fancy decor or five-star service, but the flavors are amazing, and the prices are reasonable. The staff could be more attentive, but it's worth it for the food. The fajitas were sizzling and full of flavor, and the side of refried beans was perfectly creamy."
+    },
+    {
+      reviewer: "Alyssa Turner",
+      overallRating: 4.2,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Delicious food with authentic flavors! The service was average, and the atmosphere is simple, but the value and taste make up for it. The nachos were loaded and so tasty, with plenty of melted cheese, jalapeños, and fresh pico de gallo. The carne asada was juicy and well-seasoned."
+    },
+    {
+      reviewer: "Brandon Lee",
+      overallRating: 3.8,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food but the place itself could use some improvements. The seating was cramped, and the decor is outdated. Service was okay. I'd come back for the food but probably for takeout next time. The chicken tinga was flavorful, and the side of rice was well-cooked."
+    },
+    {
+      reviewer: "Chloe Martin",
+      overallRating: 4.5,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Amazing flavors and great portions! The staff was friendly, although service was a tad slow. The atmosphere is basic, but the food more than compensates. Highly recommend the quesadillas—they were crispy, cheesy, and filled with perfectly seasoned meat and vegetables."
+    },
+    {
+      reviewer: "David Harris",
+      overallRating: 3.9,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Solid Mexican food at reasonable prices. The service was average, and the ambiance is nothing special. Worth a visit if you're nearby and craving some tacos. The shrimp alfredo tacos were an interesting twist and surprisingly tasty."
+    },
+    {
+      reviewer: "Ella Robinson",
+      overallRating: 4.7,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The best tacos I've had in the city! The flavors are authentic, and the ingredients are fresh. Service was friendly, but the place is small and can get crowded. Definitely worth it, though. The fish tacos were perfectly grilled, and the cabbage slaw added a nice crunch."
+    },
+    {
+      reviewer: "Frank Clark",
+      overallRating: 3.6,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food was decent, but the restaurant could use a makeover. The seating was uncomfortable, and the place felt cramped. Service was slow, but the food was good enough to consider takeout in the future. The beef enchiladas were rich and satisfying."
+    },
+    {
+      reviewer: "Grace Lewis",
+      overallRating: 4.3,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Love the food here! The burritos are huge and packed with flavor. The atmosphere is simple, and the service is average, but the taste and value are outstanding. The carne asada burrito was loaded with tender meat, fresh vegetables, and a delicious homemade salsa."
+    },
+    {
+      reviewer: "Henry Young",
+      overallRating: 4.0,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great tasting food at a fair price. The service was mediocre; our server seemed uninterested. The atmosphere is nothing to write home about, but the food is worth it. The chicken fajitas were well-seasoned and perfectly cooked."
+    },
+    {
+      reviewer: "Isabella Scott",
+      overallRating: 4.8,
+      taste: 5,
+      service: 4,
+      atmosphere: 4,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Absolutely fantastic! The flavors are rich and authentic. The service was attentive, and while the atmosphere is modest, it has a cozy feel. Can't recommend this place enough. The shrimp tacos were succulent, and the side of black beans and rice complemented the meal perfectly."
+    },
+    {
+      reviewer: "Jack Walker",
+      overallRating: 3.7,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food but the service could be better. Our orders took a long time, and the staff seemed disorganized. The atmosphere is basic, but if you have the patience, the food is worth it. The steak tacos were flavorful and cooked to perfection."
+    },
+    {
+      reviewer: "Karen Perez",
+      overallRating: 4.4,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Delicious food at unbeatable prices! The service was okay; they seemed short-staffed. The atmosphere is simple, but the flavors are anything but. Will be back for sure. The carnitas were tender and full of flavor, and the side of salsa verde was zesty and fresh."
+    },
+    {
+      reviewer: "Liam Mitchell",
+      overallRating: 3.5,
+      taste: 4,
+      service: 2,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food was good, but the service was lacking. Our waiter was inattentive, and the atmosphere was dull. Might consider takeout next time to enjoy the food without the dine-in experience. The chicken enchiladas were satisfying, but the presentation could use improvement."
+    },
+    {
+      reviewer: "Mia Carter",
+      overallRating: 4.6,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Fantastic food with authentic flavors! The staff was friendly, and while the place isn't fancy, it's clean and cozy. Highly recommend the tamales—they were perfectly steamed and packed with flavorful filling. The side of Mexican rice was fluffy and well-seasoned."
+    },
+    {
+      reviewer: "Noah Diaz",
+      overallRating: 4.1,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great value for the quality of food. The tacos were amazing! Service was average, and the atmosphere is basic, but the taste makes it a must-visit. The carne asada was tender and juicy, and the homemade tortillas were soft and fresh. The side of guacamole was creamy and delicious."
+    },
+    {
+      reviewer: "Olivia Ramirez",
+      overallRating: 4.9,
+      taste: 5,
+      service: 5,
+      atmosphere: 4,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "An absolute treasure! The food is beyond delicious, and the service was exceptional this time. The atmosphere is quaint and adds to the overall charm. Highly recommend to anyone who loves Mexican cuisine. The shrimp tacos were perfectly grilled, and the side of elote (Mexican street corn) was flavorful and satisfying. The staff went out of their way to ensure we had a great dining experience."
+    },
+    {
+      reviewer: "Peter Gonzalez",
+      overallRating: 3.8,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Food was good, but the place is a bit run-down. Service was acceptable but not great. Would probably order takeout next time. The carne asada plate was tasty, but the presentation could be improved."
+    },
+    {
+      reviewer: "Quinn Murphy",
+      overallRating: 4.2,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Delicious food that won't break the bank! The service could be improved; our server was slow to take our order. The atmosphere is simple, but the flavors make up for it. The chicken tacos were juicy and well-seasoned, and the side of refried beans was creamy and flavorful."
+    },
+    {
+      reviewer: "Rachel Nguyen",
+      overallRating: 3.9,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food but not outstanding. The service was average, and the atmosphere was plain. A decent spot for a quick meal. The beef fajitas were satisfying, though the presentation was basic."
+    },
+    {
+      reviewer: "Samuel Lee",
+      overallRating: 4.5,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Excellent food and great value! The staff was friendly, and while the atmosphere is modest, it has its own charm. Will definitely be returning. The shrimp enchiladas were rich and creamy, and the side of Spanish rice was perfectly seasoned."
+    },
+    {
+      reviewer: "Taylor White",
+      overallRating: 3.6,
+      taste: 4,
+      service: 2,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food was tasty, but the service was poor. Our waiter was rude, and the atmosphere was lacking. Might consider takeout next time. The carne asada was flavorful, but the overall dining experience was disappointing."
+    },
+    {
+      reviewer: "Uma Patel",
+      overallRating: 4.3,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great flavors and generous portions! Service was average, and the atmosphere is basic, but the food is the star here. The carnitas were tender and full of flavor, and the side of guacamole was creamy and delicious."
+    },
+    {
+      reviewer: "Victor Chen",
+      overallRating: 3.7,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Decent place for Mexican food. Nothing spectacular, but the prices are fair. The service was okay, and the atmosphere was plain. The chicken tacos were tasty, though the presentation was basic."
+    },
+    {
+      reviewer: "Wendy Martinez",
+      overallRating: 4.7,
+      taste: 5,
+      service: 4,
+      atmosphere: 4,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Absolutely loved it! The food is authentic and delicious. The service was attentive, and the atmosphere was cozy. Highly recommend! The carne asada tacos were perfectly grilled, and the side of black beans and rice complemented the meal beautifully. The homemade margaritas were a perfect pairing."
+    },
+    {
+      reviewer: "Xavier Hernandez",
+      overallRating: 3.5,
+      taste: 4,
+      service: 2,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Food was good, but the service was lacking. The atmosphere needs improvement. Might get takeout next time to enjoy the food without the dine-in drawbacks. The shrimp tacos were flavorful, but the overall experience was underwhelming."
+    },
+    {
+      reviewer: "Yvonne Kim",
+      overallRating: 4.4,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Delicious food and great value! Service was average, but the taste more than makes up for it. The atmosphere is simple but acceptable. The chicken enchiladas were rich and satisfying, and the side of rice was perfectly cooked."
+    },
+    {
+      reviewer: "Zachary Thompson",
+      overallRating: 3.8,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food but the place could use some updating. Service was okay, and the atmosphere was lacking. Might opt for takeout in the future. The beef tacos were tasty, though the presentation was basic."
+    },
+    {
+      reviewer: "Abigail Turner",
+      overallRating: 4.5,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Fantastic food with authentic flavors! The staff was friendly, and while the atmosphere isn't fancy, it's comfortable. Highly recommend trying their specials. The pork al pastor was succulent and perfectly spiced, and the side of corn on the cob was grilled to perfection."
+    },
+    {
+      reviewer: "Benjamin Green",
+      overallRating: 3.6,
+      taste: 4,
+      service: 2,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food was tasty, but the service left much to be desired. Our orders were mixed up, and the atmosphere was dull. Might consider takeout next time. The chicken quesadillas were flavorful, but the overall experience was disappointing."
+    },
+    {
+      reviewer: "Catherine Nelson",
+      overallRating: 4.2,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great food and value! Service was average, and the atmosphere is basic, but the flavors are outstanding. Will definitely return. The carne asada was tender and full of flavor, and the side of guacamole was fresh and creamy."
+    },
+    {
+      reviewer: "Daniel Foster",
+      overallRating: 4.0,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Tasty food at a reasonable price. The service was okay, and the atmosphere is nothing special. Worth a visit for the food alone. The shrimp tacos were perfectly cooked, and the side of rice was well-seasoned."
+    },
+    {
+      reviewer: "Emma Harris",
+      overallRating: 4.8,
+      taste: 5,
+      service: 5,
+      atmosphere: 4,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Absolutely amazing! The food is incredible, and the service was top-notch. The atmosphere is cozy and inviting. Can't wait to come back. The fish tacos were flaky and delicious, and the side of mango salsa added a perfect sweet and spicy kick. The staff was attentive and made sure we had everything we needed."
+    },
+    {
+      reviewer: "Felix Brooks",
+      overallRating: 3.7,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food but nothing exceptional. Service was average, and the atmosphere was plain. A decent option if you're in the area. The beef fajitas were tasty, though the presentation could be improved."
+    },
+    {
+      reviewer: "Grace Edwards",
+      overallRating: 4.3,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Delicious food and great value! The service could be better, but the taste makes up for it. The atmosphere is simple but comfortable. The carnitas were tender and flavorful, and the side of guacamole was creamy and fresh."
+    },
+    // Additional Reviews Below (Total of 50)
+    {
+      reviewer: "Hannah Scott",
+      overallRating: 4.2,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Loved every bite! The flavors are authentic and the ingredients are fresh. The service was friendly and attentive, making the dining experience enjoyable. The beef enchiladas were rich and satisfying, and the side of guacamole was creamy and delicious. Highly recommend!"
+    },
+    {
+      reviewer: "Ian Martinez",
+      overallRating: 3.9,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food but the service was a bit slow. The atmosphere is very basic and could use some improvements. The beef barbacoa was tasty, but the presentation was lacking."
+    },
+    {
+      reviewer: "Jasmine Lee",
+      overallRating: 4.5,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Fantastic meal! The flavors are bold and authentic. Service was prompt and friendly. The atmosphere is simple yet comfortable. The shrimp tacos were perfectly cooked, and the side of pico de gallo was fresh and zesty. Will definitely return!"
+    },
+    {
+      reviewer: "Kyle Thompson",
+      overallRating: 3.8,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Decent food but the place needs some updates. Service was okay, and the atmosphere was plain. The chicken fajitas were flavorful, but the overall experience was just average."
+    },
+    {
+      reviewer: "Lily Gonzalez",
+      overallRating: 4.6,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Absolutely loved it! The food is authentic and delicious. The service was attentive, and the atmosphere was cozy. Highly recommend the carne asada tacos—they were perfectly grilled and full of flavor. The side of guacamole was fresh and creamy."
+    },
+    {
+      reviewer: "Mason White",
+      overallRating: 4.0,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great Mexican food at a reasonable price. The service was average, but the food more than made up for it. The fish tacos were flaky and delicious, and the side of mango salsa added a nice sweet and spicy kick."
+    },
+    {
+      reviewer: "Nora Davis",
+      overallRating: 4.3,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Delicious and authentic! The flavors are spot-on, and the ingredients are fresh. Service was friendly and efficient. The atmosphere is simple but comfortable. The beef enchiladas were rich and flavorful, and the side of Spanish rice was perfectly seasoned."
+    },
+    {
+      reviewer: "Owen Wilson",
+      overallRating: 3.7,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food but the service was a bit slow. The atmosphere is very basic and could use some improvements. The chicken tacos were juicy and well-seasoned, but the overall experience was just average."
+    },
+    {
+      reviewer: "Paula Hernandez",
+      overallRating: 4.4,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Loved the authentic flavors and generous portions! The service was friendly and efficient. The atmosphere is simple but inviting. The carnitas were tender and full of flavor, and the side of guacamole was creamy and delicious."
+    },
+    {
+      reviewer: "Ryan Clark",
+      overallRating: 3.9,
+      taste: 4,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good Mexican food but nothing extraordinary. The service was average, and the atmosphere was plain. The beef fajitas were flavorful, though the presentation could be improved."
+    },
+    {
+      reviewer: "Sophia Lewis",
+      overallRating: 4.5,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Amazing food with authentic flavors! The staff was friendly and the service was prompt. The atmosphere is simple but comfortable. Highly recommend the shrimp tacos—they were perfectly cooked and full of flavor. The side of black beans was creamy and delicious."
+    },
+    {
+      reviewer: "Thomas Walker",
+      overallRating: 4.0,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great taste and reasonable prices. The service was average, but the food made up for it. The carne asada was tender and flavorful, and the side of guacamole was fresh and creamy."
+    },
+    {
+      reviewer: "Ursula Young",
+      overallRating: 4.2,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Delicious and authentic! The flavors are spot-on, and the ingredients are fresh. Service was friendly and efficient. The atmosphere is simple but welcoming. The chicken fajitas were perfectly seasoned, and the side of Spanish rice was fluffy and well-seasoned."
+    },
+    {
+      reviewer: "Victor Martinez",
+      overallRating: 3.8,
+      taste: 4,
+      service: 3,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Good food but the place could use some updates. Service was okay, and the atmosphere was plain. The beef tacos were tasty, but the overall experience was just average."
+    },
+    {
+      reviewer: "Wanda Scott",
+      overallRating: 4.5,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Fantastic meal! The flavors are bold and authentic. Service was prompt and friendly. The atmosphere is simple yet comfortable. The shrimp tacos were succulent and flavorful, and the side of pico de gallo was fresh and zesty. Highly recommend!"
+    },
+    {
+      reviewer: "Xena Brown",
+      overallRating: 3.6,
+      taste: 4,
+      service: 2,
+      atmosphere: 2,
+      value: 4,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "The food was tasty, but the service was lacking. Our waiter was inattentive, and the atmosphere was dull. Might consider takeout next time. The chicken enchiladas were flavorful, but the overall experience was disappointing."
+    },
+    {
+      reviewer: "Yusuf Patel",
+      overallRating: 4.3,
+      taste: 5,
+      service: 4,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Loved every bite! The flavors are authentic and the ingredients are fresh. The service was friendly and attentive, making the dining experience enjoyable. The beef enchiladas were rich and satisfying, and the side of guacamole was creamy and delicious. Highly recommend!"
+    },
+    {
+      reviewer: "Zoe Clark",
+      overallRating: 4.1,
+      taste: 5,
+      service: 3,
+      atmosphere: 3,
+      value: 5,
+      timestamp: getRandomTimestamp(),
+      comment:
+        "Great food and excellent value! The service was average, but the taste makes up for it. The atmosphere is simple but comfortable. The carne asada tacos were tender and full of flavor, and the side of rice was perfectly cooked."
+    }
+  ];
+
+  return reviews;
+};
+
+// inside const listings
+
+  const addFakeReviews = async () => {
+    const fakeReviews = generateRelevantFakeReviews();
+    const batch = firestore().batch();
+
+    try {
+      fakeReviews.forEach((review) => {
+        const reviewRef = firestore()
+          .collection('restaurants')
+          .doc(restaurantId)
+          .collection('reviews')
+          .doc();
+        batch.set(reviewRef, review);
+      });
+
+      await batch.commit();
+      alert('Fake reviews added successfully!');
+      setReviews((prevReviews) => [...prevReviews, ...fakeReviews]);
+    } catch (error) {
+      console.error('Error adding fake reviews:', error);
+      alert('Failed to add fake reviews.');
+    }
+  };
