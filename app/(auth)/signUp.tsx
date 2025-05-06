@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebaseConfig';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -21,8 +22,9 @@ const validationSchema = Yup.object().shape({
 });
 
 type RootStackParamList = {
-  signIn: undefined; // This is where you define the route and any params it may need
+  signIn: undefined;
   signUp: undefined;
+  '(pages)': undefined;
 };
 
 // Keep the splash screen visible while we fetch resources
@@ -57,10 +59,9 @@ export default function App() {
   const signUp = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      alert('Sign up successful');
-      await firestore().collection('users').doc(user.uid).set({
+      await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         createdAt: new Date(),
         description: '',
@@ -75,6 +76,7 @@ export default function App() {
           bio: '',
         },
       });
+      navigation.navigate('(pages)');
     } catch (error) {
       alert('Registration Failed: ' + error.message);
     } finally {

@@ -1,15 +1,39 @@
 import { Link, router } from 'expo-router';
 import { View, Text, Pressable, FlatList, StyleSheet, ActivityIndicator, Image, TextInput } from 'react-native';
 import { useRef, useEffect, useState } from 'react';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+import { collection, doc, getDoc, getDocs, setDoc, query, where, Timestamp } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { db } from '../../firebaseConfig';
 import axios from 'axios';
 
-const GOOGLE_PLACES_API_KEY = 'AIzaSyDWetBIR9Z_NrU4WNbNbLLx4L0vRwMghkg';
+const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY || 'AIzaSyDWetBIR9Z_NrU4WNbNbLLx4L0vRwMghkg';
 const GT_LATITUDE = 33.7756;
 const GT_LONGITUDE = -84.3963;
 const SEARCH_RADIUS = 1600;
 const MAX_DISTANCE_KM = 1.6;
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000; // 2 seconds
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+// Add retry utility function
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const retryWithBackoff = async (fn, retries = MAX_RETRIES, delay = RETRY_DELAY) => {
+  try {
+    return await fn();
+  } catch (error) {
+    if (retries === 0) throw error;
+    
+    // Check if it's a quota error
+    if (error.response?.data?.status === 'OVER_QUERY_LIMIT') {
+      console.log(`API quota exceeded. Retrying in ${delay/1000} seconds... (${retries} retries left)`);
+      await sleep(delay);
+      return retryWithBackoff(fn, retries - 1, delay * 2); // Exponential backoff
+    }
+    
+    throw error;
+  }
+};
 
 // Utility functions
 const calculateAverage = (reviews, key) => {
@@ -136,23 +160,80 @@ const SearchBar = ({ value, onSearch }) => (
   </View>
 );
 
-const fetchPlaceDetails = async (placeId) => {
+const fetchFromCache = async (placeId) => {
   try {
-    const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/details/json?` +
-      `place_id=${placeId}` +
-      `&fields=opening_hours,price_level,user_ratings_total,types,website,formatted_phone_number` +
-      `&key=${GOOGLE_PLACES_API_KEY}`
-    );
-
-    return response.data.result;
+    const docRef = doc(db, 'restaurants', placeId);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      // Check if cache is still valid
+      if (data.cachedAt && (Date.now() - data.cachedAt.toMillis()) < CACHE_DURATION) {
+        console.log('Using cached data for:', placeId);
+        return data;
+      }
+    }
+    return null;
   } catch (error) {
-    console.error('Error fetching place details:', error);
+    console.error('Error fetching from cache:', error);
     return null;
   }
 };
 
-export { fetchPlaceDetails };
+const saveToCache = async (placeId, data) => {
+  try {
+    const docRef = doc(db, 'restaurants', placeId);
+    await setDoc(docRef, {
+      ...data,
+      cachedAt: Timestamp.now()
+    });
+    console.log('Saved to cache:', placeId);
+  } catch (error) {
+    console.error('Error saving to cache:', error);
+  }
+};
+
+const fetchPlaceDetails = async (placeId) => {
+  try {
+    if (!placeId) {
+      console.error('No place_id provided');
+      return null;
+    }
+
+    // Try to get from cache first
+    const cachedData = await fetchFromCache(placeId);
+    if (cachedData) {
+      return cachedData;
+    }
+
+    // If not in cache or expired, fetch from API
+    const response = await retryWithBackoff(async () => {
+      const result = await axios.get(
+        `https://maps.googleapis.com/maps/api/place/details/json`, {
+          params: {
+            place_id: placeId,
+            fields: 'opening_hours,price_level,user_ratings_total,types,website,formatted_phone_number,photos',
+            key: GOOGLE_PLACES_API_KEY
+          }
+        }
+      );
+      return result;
+    });
+
+    if (response.data.status !== 'OK') {
+      console.error('Place details API error:', response.data.status);
+      return null;
+    }
+
+    const result = response.data.result;
+    // Save to cache
+    await saveToCache(placeId, result);
+    return result;
+  } catch (error) {
+    console.error('Error fetching place details:', error.response?.data || error.message);
+    return null;
+  }
+};
 
 const Listings = () => {
   const [restaurantData, setRestaurantData] = useState([]);
@@ -168,76 +249,132 @@ const Listings = () => {
   });
 
   useEffect(() => {
-    const fetchUserPreferences = async () => {
-      const user = auth().currentUser;
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        try {
-          const userDoc = await firestore().collection('users').doc(user.uid).get();
-          if (userDoc.exists) {
-            const userData = userDoc.data();
-            setUserPreferences(userData.preferences);
-          }
-        } catch (error) {
-          console.error('Error fetching user preferences:', error);
-        }
+        console.log('User is signed in:', user.uid);
+        fetchUserPreferences(user);
+      } else {
+        console.log('No user is signed in');
+        router.replace('/(auth)/signIn');
       }
-    };
-    fetchUserPreferences();
+    });
+
+    return () => unsubscribe();
   }, []);
 
+  const fetchUserPreferences = async (user) => {
+    try {
+      console.log('Fetching preferences for user:', user.uid);
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        console.log('User preferences:', userData.preferences);
+        setUserPreferences(userData.preferences);
+      } else {
+        console.log('No user document found');
+      }
+    } catch (error) {
+      console.error('Error fetching user preferences:', error);
+    }
+  };
+
   const processRestaurantData = async (places) => {
-    const processedPlaces = await Promise.all(places.map(async (place) => {
-      const details = await fetchPlaceDetails(place.place_id);
+    try {
+      if (!places || !Array.isArray(places) || places.length === 0) {
+        console.log('No places data received');
+        return [];
+      }
 
-      const reviewsSnapshot = await firestore()
-        .collection('restaurants')
-        .doc(place.place_id)
-        .collection('reviews')
-        .get();
+      const processedPlaces = await Promise.all(places.map(async (place) => {
+        if (!place || !place.place_id) {
+          console.log('Invalid place data:', place);
+          return null;
+        }
 
-      const reviews = reviewsSnapshot.docs.map(doc => doc.data());
+        // Try to get from cache first
+        const cachedData = await fetchFromCache(place.place_id);
+        if (cachedData) {
+          console.log('Using cached data for restaurant:', place.place_id);
+          return {
+            id: place.place_id,
+            name: place.name,
+            address: place.vicinity || place.formatted_address,
+            avgOverallRating: cachedData.rating || 0,
+            personalizedScore: null, // Will be calculated below
+            distance: calculateDistance(
+              GT_LATITUDE,
+              GT_LONGITUDE,
+              place.geometry?.location?.lat,
+              place.geometry?.location?.lng
+            ),
+            imageUrl: place.photos?.[0]?.photo_reference
+              ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${GOOGLE_PLACES_API_KEY}`
+              : null,
+            isOpenNow: cachedData.opening_hours?.open_now,
+            priceLevel: cachedData.price_level,
+            userRatingsTotal: cachedData.user_ratings_total,
+            categories: formatCategories(cachedData.types),
+            features: [
+              cachedData.opening_hours?.open_now ? '✓ Currently Open' : '✗ Currently Closed',
+              cachedData.website ? '🌐 Website Available' : null,
+              cachedData.formatted_phone_number ? '📞 Phone Available' : null,
+            ].filter(Boolean),
+          };
+        }
 
-      const avgTaste = calculateAverage(reviews, 'taste');
-      const avgService = calculateAverage(reviews, 'service');
-      const avgAtmosphere = calculateAverage(reviews, 'atmosphere');
-      const avgValue = calculateAverage(reviews, 'value');
+        const details = await fetchPlaceDetails(place.place_id);
+        console.log('Processing restaurant:', place.place_id);
 
-      const avgOverallRating = calculateAverage(reviews, 'overallRating');
-      const personalizedScore = calculatePWS(userPreferences, {
-        taste: avgTaste,
-        service: avgService,
-        value: avgValue,
-        atmosphere: avgAtmosphere,
-      });
+        const reviewsSnapshot = await getDocs(collection(db, 'restaurants', place.place_id, 'reviews'));
+        const reviews = reviewsSnapshot.docs.map(doc => doc.data());
+        console.log('Found reviews:', reviews.length);
 
-      return {
-        id: place.place_id,
-        name: place.name,
-        address: place.vicinity || place.formatted_address,
-        avgOverallRating,
-        personalizedScore,
-        distance: calculateDistance(
-          GT_LATITUDE,
-          GT_LONGITUDE,
-          place.geometry.location.lat,
-          place.geometry.location.lng
-        ),
-        imageUrl: place.photos?.[0]?.photo_reference
-          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${GOOGLE_PLACES_API_KEY}`
-          : null,
-        isOpenNow: details?.opening_hours?.open_now,
-        priceLevel: details?.price_level,
-        userRatingsTotal: details?.user_ratings_total,
-        categories: formatCategories(details?.types),
-        features: [
-          details?.opening_hours?.open_now ? '✓ Currently Open' : '✗ Currently Closed',
-          details?.website ? '🌐 Website Available' : null,
-          details?.formatted_phone_number ? '📞 Phone Available' : null,
-        ].filter(Boolean),
-      };
-    }));
+        const avgTaste = calculateAverage(reviews, 'taste');
+        const avgService = calculateAverage(reviews, 'service');
+        const avgAtmosphere = calculateAverage(reviews, 'atmosphere');
+        const avgValue = calculateAverage(reviews, 'value');
 
-    return processedPlaces;
+        const avgOverallRating = calculateAverage(reviews, 'overallRating');
+        const personalizedScore = calculatePWS(userPreferences, {
+          taste: avgTaste,
+          service: avgService,
+          value: avgValue,
+          atmosphere: avgAtmosphere,
+        });
+
+        return {
+          id: place.place_id,
+          name: place.name,
+          address: place.vicinity || place.formatted_address,
+          avgOverallRating,
+          personalizedScore,
+          distance: calculateDistance(
+            GT_LATITUDE,
+            GT_LONGITUDE,
+            place.geometry?.location?.lat,
+            place.geometry?.location?.lng
+          ),
+          imageUrl: place.photos?.[0]?.photo_reference
+            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${GOOGLE_PLACES_API_KEY}`
+            : null,
+          isOpenNow: details?.opening_hours?.open_now,
+          priceLevel: details?.price_level,
+          userRatingsTotal: details?.user_ratings_total,
+          categories: formatCategories(details?.types),
+          features: [
+            details?.opening_hours?.open_now ? '✓ Currently Open' : '✗ Currently Closed',
+            details?.website ? '🌐 Website Available' : null,
+            details?.formatted_phone_number ? '📞 Phone Available' : null,
+          ].filter(Boolean),
+        };
+      }));
+
+      return processedPlaces.filter(place => place !== null);
+    } catch (error) {
+      console.error('Error processing restaurant data:', error);
+      return [];
+    }
   };
 
   const fetchSearchResults = async (query) => {
@@ -246,14 +383,26 @@ const Listings = () => {
       return;
     }
     try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/place/textsearch/json?` +
-        `query=${query}` +
-        `&type=restaurant` +
-        `&location=${GT_LATITUDE},${GT_LONGITUDE}` +
-        `&radius=${SEARCH_RADIUS}` +
-        `&key=${GOOGLE_PLACES_API_KEY}`
-      );
+      const response = await retryWithBackoff(async () => {
+        const result = await axios.get(
+          `https://maps.googleapis.com/maps/api/place/textsearch/json`, {
+            params: {
+              query: query,
+              type: 'restaurant',
+              location: `${GT_LATITUDE},${GT_LONGITUDE}`,
+              radius: SEARCH_RADIUS,
+              key: GOOGLE_PLACES_API_KEY
+            }
+          }
+        );
+        return result;
+      });
+
+      if (response.data.status !== 'OK') {
+        console.error('Search API error:', response.data.status);
+        setSearchResults([]);
+        return;
+      }
 
       const filteredResults = response.data.results
         .filter(result => result.geometry?.location)
@@ -270,7 +419,7 @@ const Listings = () => {
       const processedResults = await processRestaurantData(filteredResults);
       setSearchResults(processedResults.sort((a, b) => a.distance - b.distance));
     } catch (error) {
-      console.error('Error fetching search results:', error);
+      console.error('Error fetching search results:', error.response?.data || error.message);
       setSearchResults([]);
     }
   };
@@ -280,22 +429,54 @@ const Listings = () => {
       if (!userPreferences) return;
 
       try {
-        const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/place/nearbysearch/json?` +
-          `location=${GT_LATITUDE},${GT_LONGITUDE}` +
-          `&radius=${SEARCH_RADIUS}` +
-          `&type=restaurant` +
-          `&key=${GOOGLE_PLACES_API_KEY}`
-        );
+        console.log('Fetching initial restaurants...');
+        const response = await retryWithBackoff(async () => {
+          const result = await axios.get(
+            `https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
+              params: {
+                location: `${GT_LATITUDE},${GT_LONGITUDE}`,
+                radius: SEARCH_RADIUS,
+                type: 'restaurant',
+                key: GOOGLE_PLACES_API_KEY
+              }
+            }
+          );
+          return result;
+        });
+
+        if (response.data.status !== 'OK') {
+          console.error('Nearby search API error:', response.data.status);
+          setRestaurantData([]);
+          setSearchResults([]);
+          return;
+        }
+
+        if (!response.data.results || !Array.isArray(response.data.results)) {
+          console.error('Invalid response format:', response.data);
+          return;
+        }
+
+        console.log('Found restaurants:', response.data.results.length);
+        
+        if (response.data.results.length === 0) {
+          console.log('No restaurants found');
+          setRestaurantData([]);
+          setSearchResults([]);
+          return;
+        }
 
         const processedResults = await processRestaurantData(response.data.results.slice(1));
-        const sponsoredPlace = await processRestaurantData([response.data.results[0]]);
-        setSponsoredRestaurant(sponsoredPlace[0]);
+        const sponsoredPlace = response.data.results[0] ? 
+          await processRestaurantData([response.data.results[0]]) : 
+          null;
 
+        setSponsoredRestaurant(sponsoredPlace?.[0] || null);
         setRestaurantData(processedResults);
         setSearchResults(processedResults);
       } catch (error) {
-        console.error('Error fetching initial restaurants:', error);
+        console.error('Error fetching initial restaurants:', error.response?.data || error.message);
+        setRestaurantData([]);
+        setSearchResults([]);
       } finally {
         setLoading(false);
       }

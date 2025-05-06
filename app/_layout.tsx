@@ -1,11 +1,11 @@
 import { Slot, Stack, useRouter, useSegments } from 'expo-router';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import * as NavigationBar from 'expo-navigation-bar';
 
 const RootLayout = () => {
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const segments = useSegments();
 
@@ -13,25 +13,24 @@ const RootLayout = () => {
     NavigationBar.setBackgroundColorAsync('#efefef');
   }, []);
 
-  const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
-    // console.log('onAuthStateChanged', user);
+  const handleAuthStateChanged = (user: User | null) => {
+    console.log('Auth state changed:', user?.uid);
     setUser(user);
     if (initializing) setInitializing(false);
   };
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
+    return unsubscribe; // unsubscribe on unmount
   }, []);
 
   useEffect(() => {
     if (initializing) return;
 
-    // const inAuthGroup = segments[0] === '(pages)';
-
     if (!user) {
       // User is not authenticated, redirect to signIn
-      router.replace('/(auth)/authHome');
+      router.replace('/(auth)/signIn');
     } else if (user) {
       // User is authenticated, redirect to home page
       router.replace('/(pages)/listings');

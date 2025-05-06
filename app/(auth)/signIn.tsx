@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import auth from '@react-native-firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebaseConfig';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -22,6 +23,7 @@ const validationSchema = Yup.object().shape({
 type RootStackParamList = {
   signIn: undefined;
   signUp: undefined;
+  '(pages)': undefined;
 };
 
 // Keep the splash screen visible while we fetch resources
@@ -54,7 +56,8 @@ export default function App() {
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
-      await auth().signInWithEmailAndPassword(email, password);
+      await signInWithEmailAndPassword(auth, email, password);
+      navigation.navigate('(pages)');
     } catch (error) {
       alert('Sign in Failed: ' + error.message);
     } finally {
