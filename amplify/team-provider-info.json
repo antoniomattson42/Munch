@@ -1,0 +1,38 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-munchapp-dev-170534-authRole",
+      "UnauthRoleArn": "arn:aws:iam::225277178130:role/amplify-munchapp-dev-170534-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::225277178130:role/amplify-munchapp-dev-170534-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-munchapp-dev-170534-deployment",
+      "UnauthRoleName": "amplify-munchapp-dev-170534-unauthRole",
+      "StackName": "amplify-munchapp-dev-170534",
+      "StackId": "arn:aws:cloudformation:us-east-1:225277178130:stack/amplify-munchapp-dev-170534/5a10fb20-2d19-11f0-9ebf-12be7bd8bf27",
+      "AmplifyAppId": "d2anjngoew9a4b"
+    },
+    "categories": {
+      "auth": {
+        "munchapp7992edac": {}
+      }
+    }
+  },
+  "antdev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-munchapp-antdev-175523-authRole",
+      "UnauthRoleArn": "arn:aws:iam::599679413286:role/amplify-munchapp-antdev-175523-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::599679413286:role/amplify-munchapp-antdev-175523-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-munchapp-antdev-175523-deployment",
+      "UnauthRoleName": "amplify-munchapp-antdev-175523-unauthRole",
+      "StackName": "amplify-munchapp-antdev-175523",
+      "StackId": "arn:aws:cloudformation:us-east-1:599679413286:stack/amplify-munchapp-antdev-175523/4f8b2d90-2d20-11f0-99c0-0affcfeba127",
+      "AmplifyAppId": "dn9xq2f0asexc"
+    },
+    "categories": {
+      "auth": {
+        "munchappd4b207c0": {}
+      }
+    }
+  }
+}

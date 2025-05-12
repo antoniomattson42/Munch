@@ -2,22 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebaseConfig';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { Auth } from 'aws-amplify';
 
-// Validation schema using Yup
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Please enter a valid email')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
+  email: Yup.string().email('Please enter a valid email').required('Email is required'),
+  password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
 });
 
 type RootStackParamList = {
@@ -26,19 +20,16 @@ type RootStackParamList = {
   '(pages)': undefined;
 };
 
-// Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  // Load the custom font
   const [fontsLoaded] = useFonts({
     'ZenAntiqueSoft': require('../../assets/fonts/ZenAntiqueSoft-Regular.ttf'),
   });
 
-  // Callback to hide splash screen when fonts are loaded
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
@@ -49,16 +40,14 @@ export default function App() {
     hideSplashScreen();
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null; // Don't render anything until fonts are loaded
-  }
+  if (!fontsLoaded) return null;
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await Auth.signIn(email, password);
       navigation.navigate('(pages)');
-    } catch (error) {
+    } catch (error: any) {
       alert('Sign in Failed: ' + error.message);
     } finally {
       setLoading(false);
@@ -68,12 +57,10 @@ export default function App() {
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1, justifyContent: 'center', backgroundColor: '#efefef', padding: 16 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {/* Title */}
         <View style={{ width: '100%', alignItems: 'center', marginBottom: 60 }}>
           <Text style={{ fontSize: 84, color: '#1a1a1a', fontFamily: 'ZenAntiqueSoft' }}>Munch</Text>
         </View>
 
-        {/* Formik form for Sign In */}
         <Formik
           initialValues={{ email: '', password: '' }}
           validationSchema={validationSchema}
@@ -133,7 +120,6 @@ export default function App() {
         </Formik>
       </View>
 
-      {/* Sign Up link */}
       <View style={{ alignItems: 'center', marginBottom: 20 }}>
         <TouchableOpacity onPress={() => navigation.navigate('signUp')}>
           <Text style={{ textAlign: 'center', color: '#6200ee' }}>

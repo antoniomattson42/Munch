@@ -1,24 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../../firebaseConfig';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { Auth } from 'aws-amplify';
 
-// Validation schema using Yup
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Please enter a valid email')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
+  email: Yup.string().email('Please enter a valid email').required('Email is required'),
+  password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
 });
 
 type RootStackParamList = {
@@ -27,21 +20,16 @@ type RootStackParamList = {
   '(pages)': undefined;
 };
 
-// Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  // Load the custom font
   const [fontsLoaded] = useFonts({
     'ZenAntiqueSoft': require('../../assets/fonts/ZenAntiqueSoft-Regular.ttf'),
   });
 
-  // Callback to hide splash screen when fonts are loaded
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
@@ -53,31 +41,20 @@ export default function App() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null; // Don't render anything until fonts are loaded
+    return null;
   }
 
   const signUp = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      await setDoc(doc(db, 'users', user.uid), {
-        email: user.email,
-        createdAt: new Date(),
-        description: '',
-        preferences: {
-          atmosphere: '1',
-          service: '1',
-          taste: '1',
-          value: '1',
-        },
-        profileInfo: {
-          username: '',
-          bio: '',
-        },
+      await Auth.signUp({
+        username: email,
+        password,
+        attributes: { email },
       });
-      navigation.navigate('(pages)');
-    } catch (error) {
+      alert('Account created. Please check your email for a verification code.');
+      navigation.navigate('signIn');
+    } catch (error: any) {
       alert('Registration Failed: ' + error.message);
     } finally {
       setLoading(false);
@@ -87,12 +64,10 @@ export default function App() {
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1, justifyContent: 'center', backgroundColor: '#efefef', padding: 16 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {/* Title */}
         <View style={{ width: '100%', alignItems: 'center', marginBottom: 60 }}>
           <Text style={{ fontSize: 84, color: '#1a1a1a', fontFamily: 'ZenAntiqueSoft' }}>Munch</Text>
         </View>
 
-        {/* Formik form for Sign In */}
         <Formik
           initialValues={{ email: '', password: '' }}
           validationSchema={validationSchema}
@@ -152,7 +127,6 @@ export default function App() {
         </Formik>
       </View>
 
-      {/* Sign In link */}
       <View style={{ alignItems: 'center', marginBottom: 20 }}>
         <TouchableOpacity onPress={() => navigation.navigate('signIn')}>
           <Text style={{ textAlign: 'center', color: '#6200ee' }}>

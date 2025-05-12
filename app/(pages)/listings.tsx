@@ -5,6 +5,7 @@ import { collection, doc, getDoc, getDocs, setDoc, query, where, Timestamp } fro
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../../firebaseConfig';
 import axios from 'axios';
+import { Auth } from 'aws-amplify';
 
 const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY || 'AIzaSyDWetBIR9Z_NrU4WNbNbLLx4L0vRwMghkg';
 const GT_LATITUDE = 33.7756;
