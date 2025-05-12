@@ -1,0 +1,58 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-munchapp-antdev-175523-authRole",
+      "UnauthRoleArn": "arn:aws:iam::599679413286:role/amplify-munchapp-antdev-175523-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::599679413286:role/amplify-munchapp-antdev-175523-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-munchapp-antdev-175523-deployment",
+      "UnauthRoleName": "amplify-munchapp-antdev-175523-unauthRole",
+      "StackName": "amplify-munchapp-antdev-175523",
+      "StackId": "arn:aws:cloudformation:us-east-1:599679413286:stack/amplify-munchapp-antdev-175523/4f8b2d90-2d20-11f0-99c0-0affcfeba127",
+      "AmplifyAppId": "dn9xq2f0asexc"
+    }
+  },
+  "auth": {
+    "munchappd4b207c0": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-munchapp-antdev-175523-deployment/amplify-cfn-templates/auth/munchappd4b207c0-cloudformation-template.json",
+        "logicalId": "authmunchappd4b207c0"
+      },
+      "lastPushTimeStamp": "2025-05-09T22:01:33.452Z",
+      "output": {
+        "UserPoolId": "us-east-1_IgAJp3TjA",
+        "AppClientIDWeb": "46k9kughqabdm9jqgd4pejs802",
+        "AppClientID": "8onnutltpsboeh3d4hnl44i7b",
+        "IdentityPoolId": "us-east-1:fad1e016-9c4d-4290-bf14-9dc900cf159d",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:599679413286:userpool/us-east-1_IgAJp3TjA",
+        "IdentityPoolName": "munchappd4b207c0_identitypool_d4b207c0__antdev",
+        "UserPoolName": "munchappd4b207c0_userpool_d4b207c0"
+      },
+      "lastPushDirHash": "g5vk+HWutx8ct0ALG6G6pa9dmqw="
+    }
+  }
+}
