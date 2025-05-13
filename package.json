@@ -12,9 +12,6 @@
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/slider": "^4.5.5",
-    "@react-native-firebase/app": "^21.5.0",
-    "@react-native-firebase/auth": "^21.5.0",
-    "@react-native-firebase/firestore": "^21.5.0",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
@@ -30,6 +27,7 @@
     "expo-splash-screen": "~0.27.6",
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
+    "expo-updates": "~0.25.27",
     "faker-js": "^1.0.0",
     "firebase": "^11.0.2",
     "formik": "^2.4.6",
@@ -44,8 +42,7 @@
     "react-native-screens": "3.31.1",
     "typescript": "~5.3.3",
     "undefined": "faker-js/faker",
-    "yup": "^1.4.0",
-    "expo-updates": "~0.25.27"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
