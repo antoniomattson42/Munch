@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+// import auth from '@react-native-firebase/auth';
+// import firestore from '@react-native-firebase/firestore';
 import Slider from '@react-native-community/slider';
 
 const TOTAL_POINTS_LIMIT = 16;

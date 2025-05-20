@@ -1,8 +1,8 @@
 import { Link, router } from 'expo-router';
 import { View, Text, Pressable, FlatList, StyleSheet, ActivityIndicator, Image, TextInput } from 'react-native';
 import { useRef, useEffect, useState } from 'react';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+// import firestore from '@react-native-firebase/firestore';
+// import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyDWetBIR9Z_NrU4WNbNbLLx4L0vRwMghkg';

@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-munch-dev-223543-authRole",
+      "UnauthRoleArn": "arn:aws:iam::599679413286:role/amplify-munch-dev-223543-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::599679413286:role/amplify-munch-dev-223543-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-munch-dev-223543-deployment",
+      "UnauthRoleName": "amplify-munch-dev-223543-unauthRole",
+      "StackName": "amplify-munch-dev-223543",
+      "StackId": "arn:aws:cloudformation:us-east-1:599679413286:stack/amplify-munch-dev-223543/f8a8e0f0-2fa2-11f0-96f2-0ec83d2248e9",
+      "AmplifyAppId": "d67diqwp2rqwo"
+    },
+    "categories": {
+      "auth": {
+        "munch53c99f62": {}
+      }
+    }
+  }
+}

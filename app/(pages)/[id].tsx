@@ -1,8 +1,8 @@
 import { useLocalSearchParams, router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Pressable, ActivityIndicator, TextInput } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+// import firestore from '@react-native-firebase/firestore';
+// import auth from '@react-native-firebase/auth';
 import { Picker } from '@react-native-picker/picker';
 import { fetchPlaceDetails } from './listings';
 

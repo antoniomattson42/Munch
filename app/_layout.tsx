@@ -1,5 +1,5 @@
 import { Slot, Stack, useRouter, useSegments } from 'expo-router';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+// import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useEffect, useState } from 'react';
 import * as NavigationBar from 'expo-navigation-bar';
 

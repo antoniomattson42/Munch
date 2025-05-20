@@ -113,6 +113,9 @@ android {
     defaultConfig {
         applicationId 'com.foodeaters.munch'
         minSdkVersion rootProject.ext.minSdkVersion
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'munch'
+        ]
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
