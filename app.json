@@ -15,13 +15,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.foodeaters.munch",
-      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "bundleIdentifier": "com.foodeaters.munch"
       },
       "package": "com.foodeaters.munch",
       "googleServicesFile": "./google-services.json"
