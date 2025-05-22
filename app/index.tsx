@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
-import Amplify from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 
-(Amplify as any).configure(awsconfig);
+try {
+  Amplify.configure(awsconfig);
+} catch (error) {
+  console.warn('Failed to configure Amplify:', error);
+}
 
 export default function Index() {
   const router = useRouter();

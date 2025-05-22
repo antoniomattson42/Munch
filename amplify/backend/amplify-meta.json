@@ -13,19 +13,15 @@
     }
   },
   "auth": {
-    "munch53c99f62": {
+    "munchapp": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false,
       "frontendAuthConfig": {
         "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
-        "signupAttributes": [
-          "EMAIL"
-        ],
+        "usernameAttributes": [],
+        "signupAttributes": [],
         "passwordProtectionSettings": {
           "passwordPolicyMinLength": 8,
           "passwordPolicyCharacters": []
@@ -35,24 +31,25 @@
           "SMS"
         ],
         "verificationMechanisms": [
-          "EMAIL"
+          "PHONE_NUMBER"
         ]
       },
       "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-munch-dev-223543-deployment/amplify-cfn-templates/auth/munch53c99f62-cloudformation-template.json",
-        "logicalId": "authmunch53c99f62"
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-munch-dev-223543-deployment/amplify-cfn-templates/auth/munchapp-cloudformation-template.json",
+        "logicalId": "authmunchapp"
       },
-      "lastPushTimeStamp": "2025-05-13T02:42:04.144Z",
+      "lastPushTimeStamp": "2025-05-22T02:52:38.636Z",
       "output": {
-        "UserPoolId": "us-east-1_AYjLPp99x",
-        "AppClientIDWeb": "7vvhnbug5jv1lk8sq3gkned5p2",
-        "AppClientID": "68h0jf2ioccvtcppb4ltqu5s6p",
-        "IdentityPoolId": "us-east-1:95b06e15-e25e-41f8-9fb3-7fda3875e78e",
-        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:599679413286:userpool/us-east-1_AYjLPp99x",
-        "IdentityPoolName": "munch53c99f62_identitypool_53c99f62__dev",
-        "UserPoolName": "munch53c99f62_userpool_53c99f62"
+        "CreatedSNSRole": "arn:aws:iam::599679413286:role/sns1d5d864a223543-dev",
+        "UserPoolId": "us-east-1_qMcM8uM8x",
+        "AppClientIDWeb": "59a5p9fs9i1c4vd4h2q0kil7d2",
+        "AppClientID": "4n0tmcmlud5ev1bjt3f5s5d3gf",
+        "IdentityPoolId": "us-east-1:2e0b7b29-47e9-475d-8928-f0a8c012331a",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:599679413286:userpool/us-east-1_qMcM8uM8x",
+        "IdentityPoolName": "munch_users__dev",
+        "UserPoolName": "munch_user_pool"
       },
-      "lastPushDirHash": "oI3hlx3DYVFd16Dbcdi9HLIjV0E="
+      "lastPushDirHash": "8XvqUqx63+0HO+F1LVufEFDTdms="
     }
   }
 }

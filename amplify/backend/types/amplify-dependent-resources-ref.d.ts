@@ -1,8 +1,9 @@
 export type AmplifyDependentResourcesAttributes = {
   "auth": {
-    "munch53c99f62": {
+    "munchapp": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
+      "CreatedSNSRole": "string",
       "IdentityPoolId": "string",
       "IdentityPoolName": "string",
       "UserPoolArn": "string",

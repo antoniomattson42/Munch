@@ -1,3 +1,4 @@
+import React from 'react';
 import { Slot, Stack, useRouter, useSegments } from 'expo-router';
 // import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useEffect, useState } from 'react';
@@ -5,7 +6,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 
 const RootLayout = () => {
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const [user, setUser] = useState(null);
   const router = useRouter();
   const segments = useSegments();
 
@@ -13,15 +14,16 @@ const RootLayout = () => {
     NavigationBar.setBackgroundColorAsync('#efefef');
   }, []);
 
-  const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
+  const onAuthStateChanged = (user) => {
     // console.log('onAuthStateChanged', user);
     setUser(user);
     if (initializing) setInitializing(false);
   };
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    // Mock auth state change for now
+    const mockUser = null; // or { uid: '123', email: 'user@example.com' } for testing
+    onAuthStateChanged(mockUser);
   }, []);
 
   useEffect(() => {
@@ -39,13 +41,23 @@ const RootLayout = () => {
   }, [user, initializing]);
 
   return (
-    <>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(pages)" options={{ headerShown: false }} />
-      </Stack>
-    </>
+    <Stack>
+      <Stack.Screen 
+        name="index" 
+        options={{ headerShown: false }} 
+        key="index"
+      />
+      <Stack.Screen 
+        name="(auth)" 
+        options={{ headerShown: false }} 
+        key="auth"
+      />
+      <Stack.Screen 
+        name="(pages)" 
+        options={{ headerShown: false }} 
+        key="pages"
+      />
+    </Stack>
   );
 };
 

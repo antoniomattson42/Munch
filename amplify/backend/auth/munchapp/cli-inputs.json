@@ -1,12 +1,12 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "munch53c99f62_identitypool_53c99f62",
+    "identityPoolName": "munch_users",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "munch53c99f62",
-    "userPoolName": "munch53c99f62_userpool_53c99f62",
+    "resourceNameTruncated": "munch1d5d864a",
+    "userPoolName": "munch_user_pool",
     "autoVerifiedAttributes": [
-      "email"
+      "phone_number"
     ],
     "mfaConfiguration": "OFF",
     "mfaTypes": [
@@ -19,9 +19,7 @@
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
-    "requiredAttributes": [
-      "email"
-    ],
+    "requiredAttributes": [],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
@@ -31,15 +29,17 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "munch553c99f62_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "muncha1d5d864a_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "53c99f62",
-    "resourceName": "munch53c99f62",
+    "sharedId": "1d5d864a",
+    "resourceName": "munchapp",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "default",
-    "usernameAttributes": [
-      "email"
-    ],
+    "useDefault": "manual",
+    "thirdPartyAuth": false,
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "triggers": {},
+    "hostedUI": false,
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

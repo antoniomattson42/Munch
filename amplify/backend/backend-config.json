@@ -1,6 +1,6 @@
 {
   "auth": {
-    "munch53c99f62": {
+    "munchapp": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -12,15 +12,11 @@
           "passwordPolicyCharacters": [],
           "passwordPolicyMinLength": 8
         },
-        "signupAttributes": [
-          "EMAIL"
-        ],
+        "signupAttributes": [],
         "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
+        "usernameAttributes": [],
         "verificationMechanisms": [
-          "EMAIL"
+          "PHONE_NUMBER"
         ]
       },
       "providerPlugin": "awscloudformation",
