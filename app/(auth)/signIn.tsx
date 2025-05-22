@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import { Auth } from 'aws-amplify';
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('Please enter a valid email').required('Email is required'),
+  username: Yup.string().required('Username is required'),
   password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
 });
 
@@ -33,10 +33,10 @@ export default function SignInScreen() {
 
   if (!fontsLoaded) return null;
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (username: string, password: string) => {
     setLoading(true);
     try {
-      await Auth.signIn(email, password);
+      await Auth.signIn(username, password);
       navigation.navigate('(pages)');
     } catch (error: any) {
       alert('Sign in failed: ' + error.message);
@@ -50,28 +50,27 @@ export default function SignInScreen() {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontSize: 84, color: '#1a1a1a', fontFamily: 'ZenAntiqueSoft', marginBottom: 60 }}>Munch</Text>
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ username: '', password: '' }}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
-            signIn(values.email, values.password);
+            signIn(values.username, values.password);
             setSubmitting(false);
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
             <>
               <TextInput
-                label="Email"
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
+                label="Username"
+                onChangeText={handleChange('username')}
+                onBlur={handleBlur('username')}
+                value={values.username}
                 mode="outlined"
-                keyboardType="email-address"
                 autoCapitalize="none"
                 style={{ marginBottom: 8, width: '100%' }}
-                error={touched.email && !!errors.email}
+                error={touched.username && !!errors.username}
               />
-              {touched.email && errors.email && (
-                <Text style={{ color: 'red', alignSelf: 'flex-start' }}>{errors.email}</Text>
+              {touched.username && errors.username && (
+                <Text style={{ color: 'red', alignSelf: 'flex-start' }}>{errors.username}</Text>
               )}
               <TextInput
                 label="Password"

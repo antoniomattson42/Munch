@@ -9,11 +9,18 @@
       "UnauthRoleName": "amplify-munch-dev-223543-unauthRole",
       "StackName": "amplify-munch-dev-223543",
       "StackId": "arn:aws:cloudformation:us-east-1:599679413286:stack/amplify-munch-dev-223543/f8a8e0f0-2fa2-11f0-96f2-0ec83d2248e9",
-      "AmplifyAppId": "d67diqwp2rqwo"
+      "AmplifyAppId": "d67diqwp2rqwo",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-munch-dev-223543-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
         "munchapp": {}
+      },
+      "function": {
+        "munchappPreSignup": {
+          "deploymentBucketName": "amplify-munch-dev-223543-deployment",
+          "s3Key": "amplify-builds/munchappPreSignup-4b3845414a4d694e3973-build.zip"
+        }
       }
     }
   }

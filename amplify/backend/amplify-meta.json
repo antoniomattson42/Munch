@@ -9,14 +9,25 @@
       "UnauthRoleName": "amplify-munch-dev-223543-unauthRole",
       "StackName": "amplify-munch-dev-223543",
       "StackId": "arn:aws:cloudformation:us-east-1:599679413286:stack/amplify-munch-dev-223543/f8a8e0f0-2fa2-11f0-96f2-0ec83d2248e9",
-      "AmplifyAppId": "d67diqwp2rqwo"
+      "AmplifyAppId": "d67diqwp2rqwo",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-munch-dev-223543-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     }
   },
   "auth": {
     "munchapp": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "munchappPreSignup",
+          "triggerProvider": "Cognito",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        }
+      ],
       "customAuth": false,
       "frontendAuthConfig": {
         "socialProviders": [],
@@ -38,7 +49,7 @@
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-munch-dev-223543-deployment/amplify-cfn-templates/auth/munchapp-cloudformation-template.json",
         "logicalId": "authmunchapp"
       },
-      "lastPushTimeStamp": "2025-05-22T02:52:38.636Z",
+      "lastPushTimeStamp": "2025-05-22T21:29:39.562Z",
       "output": {
         "CreatedSNSRole": "arn:aws:iam::599679413286:role/sns1d5d864a223543-dev",
         "UserPoolId": "us-east-1_qMcM8uM8x",
@@ -49,7 +60,35 @@
         "IdentityPoolName": "munch_users__dev",
         "UserPoolName": "munch_user_pool"
       },
-      "lastPushDirHash": "8XvqUqx63+0HO+F1LVufEFDTdms="
+      "lastPushDirHash": "3jB4zq8FGUFAGhn/kqb9MJ64Z+E="
+    }
+  },
+  "function": {
+    "munchappPreSignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2025-05-22T21:27:06.451Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2025-05-22T21:27:06.509Z",
+      "distZipFilename": "munchappPreSignup-4b3845414a4d694e3973-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-munch-dev-223543-deployment",
+        "s3Key": "amplify-builds/munchappPreSignup-4b3845414a4d694e3973-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-munch-dev-223543-deployment/amplify-cfn-templates/function/munchappPreSignup-cloudformation-template.json",
+        "logicalId": "functionmunchappPreSignup"
+      },
+      "lastPushTimeStamp": "2025-05-22T21:29:39.562Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::599679413286:role/munchappPreSignup-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:599679413286:function:munchappPreSignup-dev",
+        "Name": "munchappPreSignup-dev",
+        "LambdaExecutionRole": "munchappPreSignup-dev"
+      },
+      "lastPushDirHash": "AlN/h0OG7KVCgOmP/3amiKr0fvc="
     }
   }
 }

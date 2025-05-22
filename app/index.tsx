@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Amplify } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
+import 'react-native-get-random-values';
 
 try {
   Amplify.configure(awsconfig);
