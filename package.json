@@ -47,7 +47,8 @@
     "react-native-screens": "3.31.1",
     "typescript": "~5.3.3",
     "undefined": "faker-js/faker",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "expo-random": "~14.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
