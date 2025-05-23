@@ -8,6 +8,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Auth } from 'aws-amplify';
+import { useRouter } from 'expo-router';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
@@ -25,6 +26,7 @@ SplashScreen.preventAutoHideAsync();
 export default function SignInScreen() {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const router = useRouter();
   const [fontsLoaded] = useFonts({ 'ZenAntiqueSoft': require('../../assets/fonts/ZenAntiqueSoft-Regular.ttf') });
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export default function SignInScreen() {
     setLoading(true);
     try {
       await Auth.signIn(username, password);
-      navigation.navigate('(pages)');
+      router.push('/home');
     } catch (error: any) {
       alert('Sign in failed: ' + error.message);
     } finally {
