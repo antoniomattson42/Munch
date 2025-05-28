@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -9,6 +9,14 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Auth } from 'aws-amplify';
 import { useRouter } from 'expo-router';
+import { API_URL } from '@env';
+
+// Use the appropriate API URL based on platform
+const API_URL_PLATFORM = Platform.select({
+  android: 'http://10.0.2.2:3000', // Android emulator
+  ios: 'http://localhost:3000',    // iOS simulator
+  default: 'http://localhost:3000' // Fallback
+});
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
@@ -38,7 +46,24 @@ export default function SignInScreen() {
   const signIn = async (username: string, password: string) => {
     setLoading(true);
     try {
+      // First sign in with AWS Cognito
       await Auth.signIn(username, password);
+
+      // Then ensure user exists in our database
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+      });
+
+      // If the user already exists, we'll get a 400 error, which is fine
+      // If we get any other error, something went wrong
+      if (!response.ok && response.status !== 400) {
+        throw new Error('Failed to verify user in database');
+      }
+
       router.push('/home');
     } catch (error: any) {
       alert('Sign in failed: ' + error.message);

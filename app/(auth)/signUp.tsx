@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -8,6 +8,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Auth } from 'aws-amplify';
+import { API_URL } from '@env';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
@@ -36,10 +37,25 @@ export default function SignUpScreen() {
   const signUp = async (username: string, password: string) => {
     setLoading(true);
     try {
+      // First create the user in AWS Cognito
       await Auth.signUp({
         username,
         password,
       });
+
+      // Then create the user in our database
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create user in database');
+      }
+
       alert('Account created!');
       navigation.navigate('signIn');
     } catch (error: any) {
