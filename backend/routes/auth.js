@@ -3,16 +3,16 @@ const router = express.Router();
 const pool = require('../db'); // PostgreSQL connection
 
 router.post('/register', async (req, res) => {
-  const { username } = req.body;
+  const { username, sub} = req.body;
   
-  if (!username) {
-    return res.status(400).json({ error: 'Username is required' });
+  if (!username || !sub) {
+    return res.status(400).json({ error: 'Username and sub are required' });
   }
 
   try {
     const result = await pool.query(
-      'INSERT INTO users (name) VALUES ($1) RETURNING *',
-      [username]
+      'INSERT INTO users (cognito_sub, name) VALUES ($1, $2) RETURNING *',
+      [sub, username]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {

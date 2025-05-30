@@ -43,13 +43,18 @@ export default function SignUpScreen() {
         password,
       });
 
+      //Store the idToken in AsyncStorage
+      const session = await Auth.currentSession();
+      const idToken = session.getIdToken();
+      const sub = idToken.payload.sub
+
       // Then create the user in our database
       const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ username, sub }),
       });
 
       if (!response.ok) {
